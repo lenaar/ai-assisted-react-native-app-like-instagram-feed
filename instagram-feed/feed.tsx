@@ -1,8 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View, FlatList } from 'react-native';
+import { Image, StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
+import {Feather} from '@expo/vector-icons';
+import Stories from './stories';
 import data from './data';
 
+const INSTAGRAM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/2/2a/Instagram_logo.svg";
+
 export default function Feed() {
+  const renderStory = ({ item, index }) => {
+    if (index === 0) return (
+      <View>
+        <Stories stories={data.stories} profile={data.profile} />
+      </View>
+    )
+    return
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Image style={styles.image} source={item.image} />
@@ -13,16 +26,30 @@ export default function Feed() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Instagram Feed Application</Text>
-      <FlatList
-        data={data.articles}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-        style={styles.list}
-      />
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar style='dark' />
+      <View style={styles.header}>
+        <Image source={{ uri: INSTAGRAM_LOGO }} style={{ width: 100, height: 50 }} />
+        <TouchableOpacity>
+          <Feather name='inbox' size={24} color='black' />
+        </TouchableOpacity>
+      
+        <Text style={styles.header}>Instagram Feed Application</Text>
+        <FlatList
+          data={data.stories}
+          renderItem={renderStory}
+          keyExtractor={item => item.id.toString()}
+          style={styles.list}
+        />
+        <FlatList
+          data={data.articles}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+          style={styles.list}
+        />
+        <StatusBar style="auto" />
+      </View>
+    </SafeAreaView>
   );
 }
 
