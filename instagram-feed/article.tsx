@@ -1,6 +1,6 @@
 
 import React, {useState} from 'react';
-import { Image, Text, View, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
@@ -9,10 +9,25 @@ export default function Article({item}) {
 
     const [likes, setLikes] = useState(item.likes)
     const [isLiked, setIsLiked] = useState(false)
+    
+    const [commentCount, setCommentCount] = useState(item.commentCount)
+    const [comment, setComment] = useState('')
 
     function onLike() {
         setIsLiked(!isLiked)
         setLikes(isLiked ? likes - 1 : likes + 1)
+    }
+
+    function onCommentCount() {
+        setCommentCount(commentCount + 1)
+    }
+
+    function writeComment() {
+        Alert.prompt('Write a comment', null, text => {
+                setComment(text)
+                onCommentCount()
+            }
+        )
     }
 
     return (
@@ -39,7 +54,7 @@ export default function Article({item}) {
                         <TouchableOpacity onPress={onLike}>
                             <Feather name='heart' size={24} color={isLiked? 'red' : 'green'} />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={writeComment}>
                             <Feather name='message-circle' size={24} color='green' />
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -54,7 +69,8 @@ export default function Article({item}) {
                 </View>
                 <View style={styles.info}>
                     <Text style={styles.likes}>Likes: {likes}</Text>
-                    <Text style={styles.commentCount}>View all comments ({item.commentCount})</Text>
+                    <Text style={styles.commentCount}>View all comments ({commentCount})</Text>
+                    <Text style={styles.commentCount}>{item.name}: {comment}</Text>
                 </View>
             </View>
         </>
