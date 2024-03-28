@@ -1,9 +1,20 @@
+
+import React, {useState} from 'react';
 import { Image, Text, View, TouchableOpacity } from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
 
 export default function Article({item}) {
+
+    const [likes, setLikes] = useState(item.likes)
+    const [isLiked, setIsLiked] = useState(false)
+
+    function onLike() {
+        setIsLiked(!isLiked)
+        setLikes(isLiked ? likes - 1 : likes + 1)
+    }
+
     return (
         <>
             <View style={styles.article}>
@@ -25,8 +36,8 @@ export default function Article({item}) {
                 {/* Action Buttons and Comments */}
                 <View style={styles.action}>
                     <View style={styles.actionLeft}>
-                        <TouchableOpacity>
-                            <Feather name='heart' size={24} color='green' />
+                        <TouchableOpacity onPress={onLike}>
+                            <Feather name='heart' size={24} color={isLiked? 'red' : 'green'} />
                         </TouchableOpacity>
                         <TouchableOpacity>
                             <Feather name='message-circle' size={24} color='green' />
@@ -42,7 +53,7 @@ export default function Article({item}) {
                     </View>
                 </View>
                 <View style={styles.info}>
-                    <Text style={styles.likes}>Likes: {item.likes}</Text>
+                    <Text style={styles.likes}>Likes: {likes}</Text>
                     <Text style={styles.commentCount}>View all comments ({item.commentCount})</Text>
                 </View>
             </View>

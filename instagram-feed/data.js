@@ -62,13 +62,13 @@ const initialData = {
       id: 1,
       avatar: require("../assets/avatar2.jpeg"),
       name: "Jane Smith",
-      isSeen: false,
+      isSeen: true,
     },
     {
       id: 2,
       avatar: require("../assets/avatar1.jpeg"),
       name: "Alice Johnson",
-      isSeen: false,
+      isSeen: true,
     },
     {
       id: 3,
