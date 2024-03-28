@@ -44,7 +44,6 @@ export default function Article({item}) {
                     </TouchableOpacity>
                 </View>
 
-                {/* Image */}
             </View>
             <Image style={styles.image} source={item.image} />
             <View style={styles.article}>

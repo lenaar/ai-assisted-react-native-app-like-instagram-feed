@@ -1,6 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import {Feather} from '@expo/vector-icons';
+import { Camera } from 'expo-camera';
 import Article from './article';
 import Stories from './stories';
 import data from './data';
@@ -8,6 +10,21 @@ import data from './data';
 const INSTAGRAM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/2/2a/Instagram_logo.svg";
 
 export default function Feed() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraVisible, setCameraVisible] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      console.log('status', status);
+      setHasPermission(status === 'granted');
+    })();
+  }, [])
+
+  const handleCameraPress = () => {
+    hasPermission ? setCameraVisible(!cameraVisible) : alert('Camera permission required');
+  }
+
   const renderStory = ({ item, index }) => {
     if (index === 0) return (
       <>
@@ -25,13 +42,28 @@ export default function Feed() {
     </View>
   );
 
+  if (cameraVisible) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Camera style={{ flex: 1 }} type={'back'}>
+          {/* Camera UI elements */}
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={() => setCameraVisible(false)}>
+            <Text style={{ fontSize: 18, color: 'white' }}>Close Camera</Text>
+          </TouchableOpacity>
+        </Camera>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='dark' />
       <View style={styles.header}>
         <Image source={{ uri: INSTAGRAM_LOGO }} style={{ width: 100, height: 50 }} />
-        <TouchableOpacity>
-          <Feather name='inbox' size={24} color='black' />
+        <TouchableOpacity onPress={handleCameraPress}>
+          <Feather name='camera' size={24} color='black' />
         </TouchableOpacity>
       
         <Text style={styles.header}>Instagram Feed Application</Text>
@@ -88,5 +120,11 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 14,
+  },
+  cameraButton: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 36,
+    alignItems: 'center',
   },
 });
