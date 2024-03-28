@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import {Feather} from '@expo/vector-icons';
+import Article from './article';
 import Stories from './stories';
 import data from './data';
 
@@ -9,19 +10,18 @@ const INSTAGRAM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/2/2a/Inst
 export default function Feed() {
   const renderStory = ({ item, index }) => {
     if (index === 0) return (
-      <View>
-        <Stories stories={data.stories} profile={data.profile} />
-      </View>
+      <>
+        <View>
+          <Stories stories={data.stories} profile={data.profile} />
+        </View>
+      </>
     )
     return
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Image style={styles.image} source={item.image} />
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.detailText}>Likes: {item.likes}</Text>
-      <Text style={styles.detailText}>Comments: {item.commentCount}</Text>
+        <Article item={item} />
     </View>
   );
 
